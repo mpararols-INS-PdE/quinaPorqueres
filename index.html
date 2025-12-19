@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quina de l'Ajuntament de Porqueres</title>
+  <style>
+    :root {
+      --bg1: #12324a;
+      --bg2: #0b1824;
+      --bg3: #1b3f5a;
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --accent: #ffb703;
+      --accent-strong: #ff7b00;
+      --text: #f2f5f7;
+      --muted: #94a3b8;
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      --font-display: "Gill Sans", "Segoe UI", "Trebuchet MS", sans-serif;
+    }
+
+    body.light {
+      --bg1: #dbeafe;
+      --bg2: #eef2ff;
+      --bg3: #c7d2fe;
+      --panel: rgba(255, 255, 255, 0.85);
+      --panel-border: rgba(15, 23, 42, 0.12);
+      --text: #0f172a;
+      --muted: #475569;
+      --shadow: 0 10px 40px rgba(15, 23, 42, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 20% 20%, var(--bg1), var(--bg2) 45%),
+        radial-gradient(circle at 80% 10%, var(--bg3), var(--bg2) 50%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      font-family: var(--font-display);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      transition: background 220ms ease, color 220ms ease;
+    }
+
+    .wrapper {
+      width: min(1400px, 96vw);
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      backdrop-filter: blur(8px);
+      transition: background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+      display: grid;
+      grid-template-columns: 1fr minmax(230px, 280px);
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      grid-column: 1 / -1;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .title img {
+      height: 60px;
+      width: auto;
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 32px);
+      letter-spacing: 0.4px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(48px, 1fr));
+      gap: 10px;
+      grid-column: 1 / 2;
+    }
+
+    button.number {
+      position: relative;
+      padding: 16px 0;
+      border-radius: 12px;
+      border: 1px solid var(--panel-border);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      font-size: 22px;
+      font-weight:550;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease,
+        background 120ms ease, border-color 120ms ease, color 120ms ease;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    button.number:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    button.number:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    button.number.marked {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border-color: rgba(0, 0, 0, 0.12);
+      color: #0a0d12;
+      box-shadow: 0 10px 22px rgba(255, 123, 0, 0.35);
+    }
+
+    .reset {
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 120ms ease, color 120ms ease, transform 120ms ease,
+        border-color 120ms ease;
+    }
+
+    .reset:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .reset:active {
+      transform: translateY(0);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--panel-border);
+      background: rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 120ms ease, transform 120ms ease, border-color 120ms ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .theme-toggle:active {
+      transform: translateY(0);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      transition: opacity 150ms ease;
+      color: inherit;
+    }
+
+    .theme-toggle .sun {
+      opacity: 0;
+      color: var(--accent-strong);
+    }
+
+    .theme-toggle .moon {
+      opacity: 1;
+      color: #f2f5f7;
+    }
+
+    body.light .theme-toggle .sun {
+      opacity: 1;
+    }
+
+    body.light .theme-toggle .moon {
+      opacity: 0;
+    }
+
+    body.light .reset,
+    body.light .theme-toggle {
+      background: rgba(15, 23, 42, 0.06);
+      border-color: rgba(15, 23, 42, 0.16);
+      color: #0f172a;
+    }
+
+    body.light .reset:hover,
+    body.light .theme-toggle:hover {
+      background: rgba(15, 23, 42, 0.12);
+    }
+
+    .sponsors {
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sponsors-title {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .sponsor-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .sponsor-grid img {
+      width: 100%;
+      height: 72px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 10px;
+      filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.18));
+    }
+
+    body.light .sponsor-grid img {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+      .wrapper {
+        grid-template-columns: 1fr;
+      }
+      .grid {
+        grid-template-columns: repeat(5, minmax(48px, 1fr));
+      }
+      button.number {
+        font-size: 16px;
+        padding: 14px 0;
+      }
+      .sponsors {
+        grid-column: 1 / -1;
+        grid-row: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrapper">
+    <header>
+      <div class="title">
+        <h1>Quina esportiva de Porqueres</h1>
+      </div>
+      <div class="actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Canvia a mode clar" title="Canvia a mode clar">
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8" fill="none" />
+            <path d="M12 3v2.1M12 18.9V21M4.2 4.2 5.8 5.8M18.2 18.2l1.6 1.6M3 12h2.1M18.9 12H21M4.2 19.8 5.8 18.2M18.2 5.8 19.8 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 14.35A8.5 8.5 0 0 1 9.65 3a8.5 8.5 0 1 0 11.35 11.35z" />
+          </svg>
+        </button>
+        <button class="reset" id="reset">Restableix</button>
+      </div>
+    </header>
+
+    <section class="grid" id="grid" aria-label="Taula de numeros de la quina"></section>
+
+    <section class="sponsors" aria-label="Sponsors de la quina">
+      <div class="sponsor-grid">
+        <img src="img/sponsors/areaEsports.png" alt="Area d'Esports" loading="lazy" />
+        <img src="img/sponsors/BPQRS_BLANC.png" alt="Basquet Porqueres" loading="lazy" />
+        <img src="img/sponsors/dfsp.png" alt="DFSP" loading="lazy" />
+        <img src="img/sponsors/ftbo.jpg" alt="Futbol Porqueres" loading="lazy" />
+        <img src="img/sponsors/logo gap text.jpg" alt="GAP" loading="lazy" />
+        <img src="img/sponsors/patinatge.jpg" alt="Patinatge Porqueres" loading="lazy" />
+        <img src="img/sponsors/volei.png" alt="Volei Porqueres" loading="lazy" />
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const grid = document.getElementById("grid");
+
+    for (let n = 1; n <= 90; n++) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "number";
+      btn.textContent = n.toString();
+      btn.dataset.number = n.toString();
+      grid.appendChild(btn);
+    }
+
+    grid.addEventListener("click", (event) => {
+      const target = event.target;
+      if (target instanceof HTMLButtonElement && target.classList.contains("number")) {
+        target.classList.toggle("marked");
+      }
+    });
+
+    document.getElementById("reset").addEventListener("click", () => {
+      grid.querySelectorAll(".number.marked").forEach((btn) => btn.classList.remove("marked"));
+    });
+
+    const themeToggle = document.getElementById("theme-toggle");
+    const setThemeLabel = () => {
+      const light = document.body.classList.contains("light");
+      const nextLabel = light ? "Canvia a mode fosc" : "Canvia a mode clar";
+      themeToggle.setAttribute("aria-label", nextLabel);
+      themeToggle.title = nextLabel;
+    };
+
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+      setThemeLabel();
+    });
+
+    setThemeLabel();
+  </script>
+</body>
+</html>
+
