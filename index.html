@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ca">
 <head>
   <meta charset="UTF-8" />
@@ -28,6 +28,8 @@
       --text: #0f172a;
       --muted: #475569;
       --shadow: 0 10px 40px rgba(15, 23, 42, 0.18);
+      --accent: #ffb703;
+      --accent-strong: #ff7b00;
     }
 
     * {
@@ -123,7 +125,7 @@
       transition: transform 120ms ease, box-shadow 120ms ease,
         background 120ms ease, border-color 120ms ease, color 120ms ease;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }}
+    }
 
     button.number:focus-visible {
       outline: 2px solid var(--accent);
@@ -239,9 +241,45 @@
       grid-column: 2 / 3;
       grid-row: 2 / 3;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      display: grid;
+      grid-template-rows: 1fr 2fr;
+      gap: 14px;
+    }
+
+    .last-number {
+      display: grid;
+      place-items: center;
+      border: 1px dashed var(--panel-border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 12px;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .last-number-label {
+      margin: 0;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .last-number-value {
+      margin: 0;
+      font-size: clamp(68px, 12vw, 132px);
+      font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+      line-height: 1;
+    }
+
+    body.light .last-number {
+      background: rgba(15, 23, 42, 0.04);
+    }
+
+    body.light .last-number-value {
+      color: #0f172a;
     }
 
     .sponsors-title {
@@ -254,10 +292,10 @@
     }
 
     .sponsor-grid {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-      align-items: stretch;
+      align-items: start;
     }
 
     .sponsor-grid img {
@@ -292,6 +330,10 @@
       .sponsors {
         grid-column: 1 / -1;
         grid-row: auto;
+        grid-template-rows: auto auto;
+      }
+      .sponsor-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -319,6 +361,10 @@
     <section class="grid" id="grid" aria-label="Taula de numeros de la quina"></section>
 
     <section class="sponsors" aria-label="Sponsors de la quina">
+      <div class="last-number" aria-live="polite">
+        <p class="last-number-label">Últim número</p>
+        <div class="last-number-value" id="last-number">—</div>
+      </div>
       <div class="sponsor-grid">
         <img src="img/sponsors/areaEsports.png" alt="Area d'Esports" loading="lazy" />
         <img src="img/sponsors/BPQRS_BLANC.png" alt="Basquet Porqueres" loading="lazy" />
@@ -343,15 +389,25 @@
       grid.appendChild(btn);
     }
 
+    const lastNumberValue = document.getElementById("last-number");
+
+    const setLastNumber = (value) => {
+      if (lastNumberValue) {
+        lastNumberValue.textContent = value ?? "—";
+      }
+    };
+
     grid.addEventListener("click", (event) => {
       const target = event.target;
       if (target instanceof HTMLButtonElement && target.classList.contains("number")) {
         target.classList.toggle("marked");
+        setLastNumber(target.dataset.number);
       }
     });
 
     document.getElementById("reset").addEventListener("click", () => {
       grid.querySelectorAll(".number.marked").forEach((btn) => btn.classList.remove("marked"));
+      setLastNumber("—");
     });
 
     const themeToggle = document.getElementById("theme-toggle");
@@ -371,4 +427,3 @@
   </script>
 </body>
 </html>
-
